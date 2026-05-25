@@ -23,6 +23,7 @@ resource "local_file" "inventory"{
     content = <<EOF
     [webservers]
     ${aws_instance.jenkinsdemo.public_ip} ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/ansible-key.pem
+EOF
     filename = "../Ansible/inventory.ini"
 }
 
