@@ -12,7 +12,7 @@ pipeline {
             steps {
                 echo 'Cloning repository...'
                 git branch: 'main',
-                    url: 'https://github.com/YOUR_USERNAME/devops-project.git'
+                    url: 'https://github.com/Gaurimandlik10/jenkins-cicd.git'
             }
         }
 
