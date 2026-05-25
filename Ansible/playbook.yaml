@@ -1,0 +1,49 @@
+---
+- name: Simple Nginx Project
+  hosts: webservers
+  become: true
+
+  vars:
+    packages:
+      - nginx
+      - curl
+    server_type: web
+
+  tasks:
+    - name: Update packages
+      apt:
+        update_cache: yes
+
+    - name: Install packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ packages }}"
+
+    - name: Copy webpage
+      copy:
+        src: files/index.html
+        dest: /var/www/html/index.html
+      when: server_type == "web"
+      notify: restart nginx          # ← triggers handler!
+
+    - name: Start Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Check Nginx
+      command: systemctl status nginx
+      register: status
+
+    - name: Print result
+      debug:
+        msg: "Website is LIVE!"
+      when: status.rc == 0
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
